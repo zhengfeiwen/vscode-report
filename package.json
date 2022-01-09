@@ -1,0 +1,115 @@
+{
+  "name": "daily-report",
+  "displayName": "daily-report",
+  "description": "周报(日报)提醒插件！Remind you report your work every week or every day!",
+  "version": "1.2.0",
+  "publisher": "zhengfeiwen",
+  "icon": "logo.png",
+  "engines": {
+    "vscode": "^1.30.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "周报",
+    "日报",
+    "report",
+    "week",
+    "day",
+    "work",
+    "task"
+  ],
+  "bugs": {
+    "url": "https://github.com/zhengfeiwen1993/vscode-report/issues",
+    "email": "1712776213@qq.com"
+  },
+  "homepage": "https://github.com/zhengfeiwen1993/vscode-report",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zhengfeiwen1993/vscode-report.git"
+  },
+  "activationEvents": [
+    "onCommand:report.showReminderView",
+    "*"
+  ],
+  "main": "./out/extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "report.showReminderView",
+        "title": "打开周报提醒",
+        "category": "report"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "周报",
+      "properties": {
+        "report.title": {
+          "type": "string",
+          "default": "快下班了，亲，该写周报啦~",
+          "description": "页面内展示文字"
+        },
+        "report.type": {
+          "type": "string",
+          "default": "default",
+          "description": "类型：default:默认图；url：网络图"
+        },
+        "report.customImages": {
+          "type": "array",
+          "default": [
+            "http://images.xuejuzi.cn/1905/1_190501101421_1.jpg"
+          ],
+          "description": "用户设置图片地址"
+        },
+        "report.reminderViewDay": {
+          "type": "boolean",
+          "default": true,
+          "description": "是否是日报"
+        },
+        "report.reminderViewWeek": {
+          "type": "number",
+          "default": 5,
+          "description": "每周几出现提示"
+        },
+        "report.reminderViewHour": {
+          "type": "number",
+          "default": 15,
+          "description": "几点出现提醒"
+        },
+        "report.remindPathDay": {
+          "type": "string",
+          "description": "日报路径"
+        },
+        "report.remindPathWeek": {
+          "type": "string",
+          "description": "周报路径"
+        },
+        "report.remindFinder": {
+          "type": "string",
+          "description": "日/周报文件夹路径"
+        },
+        "report.oaUrl": {
+          "type": "string",
+          "description": "OA系统地址"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "npm run compile && node ./node_modules/vscode/bin/test"
+  },
+  "devDependencies": {
+    "typescript": "^3.7.4",
+    "vscode": "^1.1.36",
+    "tslint": "^5.20.1",
+    "@types/node": "^13.1.4",
+    "@types/mocha": "^5.2.7",
+    "open": "^8.0.2"
+  }
+}
