@@ -111,5 +111,8 @@
     "@types/node": "^13.1.4",
     "@types/mocha": "^5.2.7",
     "open": "^8.0.2"
+  },
+  "dependencies": {
+    "open": "^8.0.2"
   }
 }

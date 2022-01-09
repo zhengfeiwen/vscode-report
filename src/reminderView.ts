@@ -1,9 +1,9 @@
 import * as vscode from "vscode";
 import Asset from "./asset";
+import open = require('open');
 const fs = require('fs');
 const util = require('./util');
 const path = require('path');
-import open = require('open');
 
 export class ReminderView {
   private static messageHandler: any = {
@@ -57,36 +57,38 @@ export class ReminderView {
         documentTitle
       );
       this.panel.reveal();
-    } else {
-      this.panel = vscode.window.createWebviewPanel(
-        'testWebview', // viewType
-        `工作汇报安排-${title}`, // 视图标题
-        vscode.ViewColumn.One, // 显示在编辑器的哪个部位
-        {
-            enableScripts: true, // 启用JS，默认禁用
-            retainContextWhenHidden: true, // webview被隐藏时保持状态，避免被重置
-        }
-      );
-      // 工程目录一定要提前获取，因为创建了webview之后activeTextEditor会不准确
-      const projectPath = '';
-      let global = { projectPath, panel: this.panel};
-      this.panel.webview.html = this.getWebViewContent(context, 'src/view/work-report.html');
-      this.panel.webview.onDidReceiveMessage(message => {
-          if (this.messageHandler[message.cmd]) {
-            this.messageHandler[message.cmd](global, message);
-          } else {
-              util.showError(`未找到名为 ${message.cmd} 回调方法!`);
-          }
-      }, undefined, context.subscriptions);
-      // this.panel.webview.html = this.generateHtml(
-      //   imagePath,
-      //   title,
-      //   documentTitle
-      // );
-      this.panel.onDidDispose(() => {
-        this.panel = undefined;
-      });
     }
+    this.panel = vscode.window.createWebviewPanel(
+      'testWebview', // viewType
+      `工作汇报安排-${title}`, // 视图标题
+      vscode.ViewColumn.One, // 显示在编辑器的哪个部位
+      {
+          enableScripts: true, // 启用JS，默认禁用
+          retainContextWhenHidden: true, // webview被隐藏时保持状态，避免被重置
+      }
+    );
+    // 工程目录一定要提前获取，因为创建了webview之后activeTextEditor会不准确
+    // const projectPath = '';
+    // let global = { projectPath, panel: this.panel};
+    this.panel.webview.html = this.getWebViewContent(context, 'lib/view/work-report.html');
+    
+    vscode.window.showErrorMessage(context.extensionPath)
+    this.panel.webview.onDidReceiveMessage((message: any) => {
+        if (this.messageHandler[message.cmd]) {
+          this.messageHandler[message.cmd](global, message);
+        } else {
+            vscode.window.showErrorMessage(`未找到名为 ${message.cmd} 回调方法!`);
+        }
+    }, undefined, context.subscriptions);
+    // this.panel.webview.html = this.generateHtml(
+    //   imagePath,
+    //   title,
+    //   documentTitle
+    // );
+    // this.panel.onDidDispose(() => {
+    //   this.panel = undefined;
+    // });
+    this.panel.reveal();
   }
 
   /**
@@ -96,7 +98,6 @@ export class ReminderView {
    * @param {*} resp 
    */
    protected static invokeCallback(panel: any, message: any, resp: any) {
-      console.log('回调消息：', resp);
       // 错误码在400-600之间的，默认弹出错误提示
       if (typeof resp == 'object' && resp.code && resp.code >= 400 && resp.code < 600) {
         vscode.window.showErrorMessage(resp.message || '发生未知错误！');
@@ -106,11 +107,11 @@ export class ReminderView {
 
   protected static getWebViewContent(context: any, templatePath: String) {
     const resourcePath = path.join(context.extensionPath, templatePath);
-    const dirPath = path.dirname(resourcePath);
+    const dirPath = path.dirname(resourcePath)
     let html = fs.readFileSync(resourcePath, 'utf-8');
     // vscode不支持直接加载本地资源，需要替换成其专有路径格式，这里只是简单的将样式和JS的路径替换
     html = html.replace(/(<link.+?href="|<script.+?src="|<img.+?src=")(.+?)"/g, (m: any, $1: any, $2: any) => {
-        return $1 + vscode.Uri.file(path.resolve(dirPath, $2)).with({ scheme: 'vscode-resource' }).toString() + '"';
+      return $1 + vscode.Uri.file(path.resolve(dirPath, $2)).with({ scheme: 'vscode-resource' }).toString() + '"';
     });
     return html;
 }

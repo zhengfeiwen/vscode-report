@@ -10,8 +10,6 @@ Every Friday before leaving work or at a custom time, it will remind you to writ
 
 In addition to automatically popping up the reminder page every Friday or at a custom time, you can also press `F1` and enter `report:打开周报提醒` to open the reminder page.
 
-![usage](images/usage.png)
-
 ## 在vscode setting.json中进行配置
 
 - `report.title`: 提示文字。 (默认值为**快下班了，亲，该写周报啦~**)
