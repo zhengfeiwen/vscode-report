@@ -41,8 +41,6 @@ export class ReminderView {
 
   public static show(context: vscode.ExtensionContext) {
     let asset: Asset = new Asset(context);
-
-    const imagePath = asset.getImageUri();
     let title = asset.getTitle();
     const configDay = Asset.getReminderViewDay();
     const documentTitle = configDay ? "日报提醒" : "周报提醒";
@@ -50,17 +48,9 @@ export class ReminderView {
       title = title.replace("周报", "日报");
     }
 
-    if (this.panel) {
-      this.panel.webview.html = this.generateHtml(
-        imagePath,
-        title,
-        documentTitle
-      );
-      this.panel.reveal();
-    }
     this.panel = vscode.window.createWebviewPanel(
       'testWebview', // viewType
-      `工作汇报安排-${title}`, // 视图标题
+      `${documentTitle}-${title}`, // 视图标题
       vscode.ViewColumn.One, // 显示在编辑器的哪个部位
       {
           enableScripts: true, // 启用JS，默认禁用
@@ -68,27 +58,24 @@ export class ReminderView {
       }
     );
     // 工程目录一定要提前获取，因为创建了webview之后activeTextEditor会不准确
-    // const projectPath = '';
-    // let global = { projectPath, panel: this.panel};
+    const projectPath = '';
+    let global = { projectPath, panel: this.panel};
     this.panel.webview.html = this.getWebViewContent(context, 'lib/view/work-report.html');
-    
-    vscode.window.showErrorMessage(context.extensionPath)
     this.panel.webview.onDidReceiveMessage((message: any) => {
         if (this.messageHandler[message.cmd]) {
           this.messageHandler[message.cmd](global, message);
         } else {
             vscode.window.showErrorMessage(`未找到名为 ${message.cmd} 回调方法!`);
         }
-    }, undefined, context.subscriptions);
+    }, vscode.Disposable, context.subscriptions);
     // this.panel.webview.html = this.generateHtml(
     //   imagePath,
     //   title,
     //   documentTitle
     // );
-    // this.panel.onDidDispose(() => {
-    //   this.panel = undefined;
-    // });
-    this.panel.reveal();
+    this.panel.onDidDispose(() => {
+      this.panel = undefined;
+    });
   }
 
   /**
