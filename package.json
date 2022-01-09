@@ -21,13 +21,13 @@
     "task"
   ],
   "bugs": {
-    "url": "https://github.com/zhengfeiwen1993/vscode-report/issues",
+    "url": "https://github.com/zhengfeiwen/vscode-report/issues",
     "email": "1712776213@qq.com"
   },
-  "homepage": "https://github.com/zhengfeiwen1993/vscode-report",
+  "homepage": "git@github.com:zhengfeiwen",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zhengfeiwen1993/vscode-report.git"
+    "url": "git@github.com:zhengfeiwen/vscode-report.git"
   },
   "activationEvents": [
     "onCommand:report.showReminderView",
@@ -44,7 +44,7 @@
     ],
     "configuration": {
       "type": "object",
-      "title": "周报",
+      "title": "日/周报",
       "properties": {
         "report.title": {
           "type": "string",
