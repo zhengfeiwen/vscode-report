@@ -16,7 +16,7 @@ export class Scheduler {
         vscode.window.setStatusBarMessage(`【报告提示时间剩余时间: ${minus}小时00分钟】`)
       } else {
         const seconds = 1 * 60 - currentMinute
-        vscode.window.setStatusBarMessage(`【报${configHour}告提示时间剩余时间: ${minus - 1}小时${Math.floor(seconds)}分钟】`)
+        vscode.window.setStatusBarMessage(`【报告提示时间剩余时间: ${minus - 1}小时${Math.floor(seconds)}分钟】`)
       }
     }, 1000)
     this.startReminderView();
